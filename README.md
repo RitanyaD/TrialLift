@@ -1,15 +1,15 @@
 # TrialLift
-```text
+
 TrialLift is a multi-agent platform for SaaS teams that identifies why trial users fail to convert to paid customers.
 
 It uses a LangGraph supervisor to route product analytics questions to specialist agents for 
-i)funnel analysis
-ii)cohort comparison
-iii)feature usage analysis
-1v)monetization opportunity detection
-v)experiment recommendation. 
+1. funnel analysis
+2. cohort comparison
+3. feature usage analysis
+4. monetization opportunity detection
+5. experiment recommendation. 
 The system validates SQL before execution, logs token usage and user interactions, and uses a configurable company profile to personalize recommendations.
-```
+
 ## Example request flow
 ```text
 TrialLift follows a full-stack analytics pipeline. The user interacts with a Streamlit frontend, while the backend handles API requests, multi-agent routing, SQL validation, database querying, and analytics logging.
@@ -41,13 +41,13 @@ FastAPI returns the final response
 Dashboard displays the answer, evidence table, SQL, and token usage
 ```
 ## Multi-Agent Pattern
-```text
+
 TrialLift uses a supervisor orchestration pattern.
 
-i)The supervisor/intent agent inspects the user's question
-ii)routes it to the best specialist agent
-iii)validates SQL before execution
-iv)retries invalid agent output once, and falls back to a general analytics agent if routing fails.
+1. The supervisor/intent agent inspects the user's question
+2. routes it to the best specialist agent
+3. validates SQL before execution
+4. retries invalid agent output once, and falls back to a general analytics agent if routing fails.
 
 ## How The Components Work Together
 The frontend dashboard is responsible for collecting the user's question and company profile. It does not directly access the database or run agents. Instead, it sends the request to the FastAPI backend.
@@ -66,7 +66,7 @@ LangGraph acts as the multi-agent orchestration layer. The supervisor first call
 
 After the specialist agent selects an analytics query, the SQL Validator Agent checks that the query is safe and read-only. The backend then runs the query against the SQLite product analytics database.
 Finally, the system summarizes the results into a business recommendation and logs the interaction. The logger records the question, detected intent, selected agent, estimated token usage, and response latency. This makes the system easier to debug and demonstrates cost-awareness.
-```
+
 ## State Management
 
 TrialLift starts with shared global state because the capstone uses a supervisor pattern with a controlled set of agents.
