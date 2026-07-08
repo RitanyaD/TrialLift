@@ -1,5 +1,5 @@
 # TrialLift
-
+```text
 TrialLift is a multi-agent platform for SaaS teams that identifies why trial users fail to convert to paid customers.
 
 It uses a LangGraph supervisor to route product analytics questions to specialist agents for 
@@ -9,9 +9,9 @@ iii)feature usage analysis
 1v)monetization opportunity detection
 v)experiment recommendation. 
 The system validates SQL before execution, logs token usage and user interactions, and uses a configurable company profile to personalize recommendations.
-
+```
 ## Example request flow
-
+```text
 TrialLift follows a full-stack analytics pipeline. The user interacts with a Streamlit frontend, while the backend handles API requests, multi-agent routing, SQL validation, database querying, and analytics logging.
 
 User opens Streamlit dashboard
@@ -39,9 +39,9 @@ Analytics Logger records intent, selected agent, token estimate, and latency
 FastAPI returns the final response
   ↓
 Dashboard displays the answer, evidence table, SQL, and token usage
-
+```
 ## Multi-Agent Pattern
-
+```text
 TrialLift uses a supervisor orchestration pattern.
 
 i)The supervisor/intent agent inspects the user's question
@@ -66,7 +66,7 @@ LangGraph acts as the multi-agent orchestration layer. The supervisor first call
 
 After the specialist agent selects an analytics query, the SQL Validator Agent checks that the query is safe and read-only. The backend then runs the query against the SQLite product analytics database.
 Finally, the system summarizes the results into a business recommendation and logs the interaction. The logger records the question, detected intent, selected agent, estimated token usage, and response latency. This makes the system easier to debug and demonstrates cost-awareness.
-
+```
 ## State Management
 
 TrialLift starts with shared global state because the capstone uses a supervisor pattern with a controlled set of agents.
@@ -93,9 +93,7 @@ TrialLift includes three failure-handling mechanisms:
 3. A fallback analytics agent responds if a specialist route fails.
 
 ## Token and Cost Controls
-
-Recruiters often look for evidence that an AI project controls cost. TrialLift includes:
-
+TrialLift includes:
 - deterministic SQL templates for common analytics questions
 - short agent prompts
 - route-first orchestration to avoid calling every agent
@@ -153,13 +151,14 @@ Open the dashboard:
 ```bash
 streamlit run dashboard/streamlit_app.py
 ```
+```text
 Frontend app open at:
 http://localhost:8501
 The API will be at:
 http://localhost:8000
 Quick check that backend is alive:
 http://localhost:8000/health
-
+```
 ## Example Questions
 
 - Why are trial users not converting?
