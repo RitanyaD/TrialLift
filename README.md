@@ -1,46 +1,58 @@
 # TrialLift
 
-TrialLift is a multi-agent product analytics platform for SaaS teams that identifies why trial users fail to convert to paid customers.
+TrialLift is a multi-agent platform for SaaS teams that identifies why trial users fail to convert to paid customers.
 
-It uses a LangGraph supervisor to route product analytics questions to specialist agents for funnel analysis, cohort comparison, feature usage analysis, monetization opportunity detection, and experiment recommendation. The system validates SQL before execution, logs token usage and user interactions, and uses a configurable company profile to personalize recommendations.
+It uses a LangGraph supervisor to route product analytics questions to specialist agents for 
+i)funnel analysis
+ii)cohort comparison
+iii)feature usage analysis
+1v)monetization opportunity detection
+v)experiment recommendation. 
+The system validates SQL before execution, logs token usage and user interactions, and uses a configurable company profile to personalize recommendations.
 
-## Why This Project
+## Example request flow
 
-This capstone is designed to demonstrate both data analytics and software engineering skills.
+TrialLift follows a full-stack analytics pipeline. The user interacts with a Streamlit frontend, while the backend handles API requests, multi-agent routing, SQL validation, database querying, and analytics logging.
 
-For data analyst roles, it shows funnel analysis, cohorts, conversion metrics, SQL, product analytics, and business recommendations.
-
-For software engineering roles, it shows LangGraph supervisor orchestration, backend architecture, SQL validation, analytics event logging, state management, token optimization, and failure handling.
-
-## Architecture
-
-```mermaid
-flowchart TD
-    A[Frontend Dashboard] --> B[FastAPI Backend]
-    B --> C[LangGraph Supervisor]
-    C --> D[Intent Agent]
-    C --> E[Funnel Analyst Agent]
-    C --> F[Cohort Analyst Agent]
-    C --> G[Feature Usage Agent]
-    C --> H[Monetization Agent]
-    C --> I[Experiment Recommendation Agent]
-    C --> J[SQL Validator Agent]
-    E --> K[(SQLite Product Data)]
-    F --> K
-    G --> K
-    H --> K
-    I --> K
-    B --> L[(Analytics Logger)]
-```
+User opens Streamlit dashboard
+  ↓
+User asks: "Why are trial users not converting?"
+  ↓
+Dashboard sends request to FastAPI
+  ↓
+FastAPI calls the LangGraph supervisor
+  ↓
+Intent Agent classifies the question as "funnel"
+  ↓
+Supervisor routes the request to the Funnel Analyst Agent
+  ↓
+Funnel Analyst Agent selects the funnel analysis SQL query
+  ↓
+SQL Validator Agent checks that the query is read-only and safe
+  ↓
+SQLite database runs the approved query
+  ↓
+Summarizer converts query results into a business recommendation
+  ↓
+Analytics Logger records intent, selected agent, token estimate, and latency
+  ↓
+FastAPI returns the final response
+  ↓
+Dashboard displays the answer, evidence table, SQL, and token usage
 
 ## Multi-Agent Pattern
 
 TrialLift uses a supervisor orchestration pattern.
 
-The supervisor inspects the user's question, routes it to the best specialist agent, validates SQL before execution, retries invalid agent output once, and falls back to a general analytics agent if routing fails.
+i)The supervisor/intent agent inspects the user's question
+ii)routes it to the best specialist agent
+iii)validates SQL before execution
+iv)retries invalid agent output once, and falls back to a general analytics agent if routing fails.
 
-## Agents
-
+## How The Components Work Together
+The frontend dashboard is responsible for collecting the user's question and company profile. It does not directly access the database or run agents. Instead, it sends the request to the FastAPI backend.
+FastAPI acts as the application server. It receives the request, validates the input, calls the LangGraph workflow, and returns a structured response to the dashboard.
+LangGraph acts as the multi-agent orchestration layer. The supervisor first calls the Intent Agent to understand the question, then routes the request to the correct specialist agent.
 | Agent | Responsibility |
 | --- | --- |
 | Intent Agent | Classifies the user's analytics question |
@@ -51,6 +63,9 @@ The supervisor inspects the user's question, routes it to the best specialist ag
 | Experiment Recommendation Agent | Suggests A/B tests based on analytics findings |
 | SQL Validator Agent | Blocks unsafe SQL and allows only read-only analytics queries |
 | Fallback Agent | Produces a general answer when specialist routing fails |
+
+After the specialist agent selects an analytics query, the SQL Validator Agent checks that the query is safe and read-only. The backend then runs the query against the SQLite product analytics database.
+Finally, the system summarizes the results into a business recommendation and logs the interaction. The logger records the question, detected intent, selected agent, estimated token usage, and response latency. This makes the system easier to debug and demonstrates cost-awareness.
 
 ## State Management
 
@@ -138,6 +153,12 @@ Open the dashboard:
 ```bash
 streamlit run dashboard/streamlit_app.py
 ```
+Frontend app open at:
+http://localhost:8501
+The API will be at:
+http://localhost:8000
+Quick check that backend is alive:
+http://localhost:8000/health
 
 ## Example Questions
 
